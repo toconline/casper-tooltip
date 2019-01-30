@@ -116,6 +116,43 @@
         this.setVisible(false);
       }
 
+    /**
+     * Function that is called to bind mouseMovement to look for tooltips
+     */
+      mouseMoveToolip (event, maxDepth = 3) {
+        let depth = 0;
+        const targetPath = event.composedPath();
+
+        // Still inside the Tooltip -- Abort
+        if ( this._tooltipBbox !== undefined ) {
+          if (event.clientX >= this._tooltipBbox.left && event.clientX <= this._tooltipBbox.right &&
+              event.clientY >= this._tooltipBbox.top  && event.clientY <= this._tooltipBbox.bottom) {
+            return;
+          }
+          this.hide();
+          this._tooltipBbox = undefined;
+        }
+
+        let firstTargetableElement = undefined;
+        // Find a tooltip, and open it at the first element
+        for ( let target of targetPath ) {
+          if ( target instanceof HTMLElement ) {
+            if ( firstTargetableElement === undefined && !target.hasAttribute('no-tooltip') ) {
+              firstTargetableElement = target;
+            }
+            const tooltip = target.tooltip || target.getAttribute('tooltip');
+            if ( tooltip ) {
+              this._tooltipBbox = target.getBoundingClientRect();
+              this.show(tooltip, firstTargetableElement);
+              break;
+            }
+          }
+          if ( ++depth === maxDepth ) {
+            break;
+          }
+        }
+      }
+
       /**
        * Define the tooltip location
        *
@@ -326,7 +363,7 @@
         this._ctx.fill();
       }
     }
-    
+
     window.customElements.define(CasperTooltip.is, CasperTooltip);
   </script>
 </dom-module>
