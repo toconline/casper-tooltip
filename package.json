@@ -1,7 +1,7 @@
 {
   "description": "Simple tooltip for casper UI",
   "name": "@casper2020/casper-tooltip",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
