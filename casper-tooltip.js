@@ -177,7 +177,7 @@ class CasperTooltip extends PolymerElement {
     this.style.width = (fitInto.width * 0.9) + 'px';
     this.$.text.style.margin = '0px';
     this.$.text.style.marginTop = this.tipHeight + 'px';
-    Polymer.dom(this.$.text).innerHTML = content;
+    this.$.text.innerHTML = content;
 
     // ... layout the tooltip so that it's stays inside the page (90% central column) ...
     tooltipWidth  = this.$.text.getBoundingClientRect().width;
