@@ -63,7 +63,7 @@ class CasperTooltip extends PolymerElement {
       </style>
       <canvas id="canvas"></canvas>
       <div id="text"></div>
-  `;
+    `;
   }
 
   static get is () {
@@ -112,6 +112,43 @@ class CasperTooltip extends PolymerElement {
     super.connectedCallback();
     this._showing = false;
     this.setVisible(false);
+  }
+
+/**
+ * Function that is called to bind mouseMovement to look for tooltips
+ */
+  mouseMoveToolip (event, maxDepth = 3) {
+    let depth = 0;
+    const targetPath = event.composedPath();
+
+    // Still inside the Tooltip -- Abort
+    if ( this._tooltipBbox !== undefined ) {
+      if (event.clientX >= this._tooltipBbox.left && event.clientX <= this._tooltipBbox.right &&
+          event.clientY >= this._tooltipBbox.top  && event.clientY <= this._tooltipBbox.bottom) {
+        return;
+      }
+      this.hide();
+      this._tooltipBbox = undefined;
+    }
+
+    let firstTargetableElement = undefined;
+    // Find a tooltip, and open it at the first element
+    for ( let target of targetPath ) {
+      if ( target instanceof HTMLElement ) {
+        if ( firstTargetableElement === undefined && !target.hasAttribute('no-tooltip') ) {
+          firstTargetableElement = target;
+        }
+        const tooltip = target.tooltip || target.getAttribute('tooltip');
+        if ( tooltip ) {
+          this._tooltipBbox = target.getBoundingClientRect();
+          this.show(tooltip, firstTargetableElement);
+          break;
+        }
+      }
+      if ( ++depth === maxDepth ) {
+        break;
+      }
+    }
   }
 
   /**
