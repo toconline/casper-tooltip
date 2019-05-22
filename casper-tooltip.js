@@ -105,7 +105,7 @@ class CasperTooltip extends PolymerElement {
     super.ready();
     this._ctx = this.$.canvas.getContext('2d');
     this._setupPixelRatio();
-    this.addEventListener('tap', e => this.hide(e));
+    this.addEventListener('click', e => this.hide(e));
   }
 
   connectedCallback () {
