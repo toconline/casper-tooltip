@@ -210,23 +210,23 @@ class CasperTooltip extends PolymerElement {
     this._showing = true;
     this.setVisible(true);
 
-    // ... set text and size the tooltip, max width up to 90% of page width ...
-    this.style.width = (fitInto.width * 0.9) + 'px';
+    // ... set text and size the tooltip, max width up to 100% of page width ...
+    this.style.width = fitInto.width + 'px';
     this.$.text.style.margin = '0px';
     this.$.text.style.marginTop = this.tipHeight + 'px';
     this.$.text.innerHTML = content;
 
-    // ... layout the tooltip so that it's stays inside the page (90% central column) ...
+    // ... layout the tooltip so that it's stays inside the page ...
     tooltipWidth  = this.$.text.getBoundingClientRect().width;
     tooltipArrowX = positionRect.left + positionRect.width / 2;
     tooltipLeft   = tooltipArrowX - tooltipWidth / 2;
     arrowLoc      = 0.5;
 
-    if ( tooltipLeft < fitInto.left + fitInto.width * 0.05 ) {
-      tooltipLeft = fitInto.left + fitInto.width * 0.05;
+    if ( tooltipLeft < fitInto.left ) {
+      tooltipLeft = fitInto.left;
       arrowLoc = (tooltipArrowX - tooltipLeft) / tooltipWidth;
-    } else if ( tooltipLeft + tooltipWidth > fitInto.left + fitInto.width * 0.95 ) {
-      tooltipLeft = fitInto.left + fitInto.width * 0.95 - tooltipWidth;
+    } else if ( tooltipLeft + tooltipWidth > fitInto.left + fitInto.width ) {
+      tooltipLeft = fitInto.left + fitInto.width - tooltipWidth;
       arrowLoc = (tooltipArrowX - tooltipLeft) / tooltipWidth;
     }
 
