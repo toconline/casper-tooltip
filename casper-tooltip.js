@@ -32,6 +32,7 @@ class CasperTooltip extends PolymerElement {
           -webkit-user-select: none;
           user-select: none;
           width: 50px;
+          z-index: 200; /* to be above the wizard */
         }
 
         .visible {
@@ -119,7 +120,7 @@ class CasperTooltip extends PolymerElement {
  */
   mouseMoveToolip (event, maxDepth = 3) {
     let depth = 0;
-    const targetPath = event.composedPath();
+    const targetPath = event.composedPath ? event.composedPath() : event.path;
 
     // Still inside the Tooltip -- Abort
     if ( this._tooltipBbox !== undefined ) {
@@ -134,33 +135,21 @@ class CasperTooltip extends PolymerElement {
     let firstTargetableElement = undefined;
     // Find a tooltip, and open it at the first element
     for ( let target of targetPath ) {
-      if ( target instanceof HTMLElement ) {
+      if ( target instanceof HTMLElement && target.tagName !== 'SLOT' ) {
         if ( firstTargetableElement === undefined && !target.hasAttribute('no-tooltip') ) {
           firstTargetableElement = target;
         }
-        const tooltip = target.tooltip || target.getAttribute('tooltip');
-        if ( tooltip ) {
+        const tooltip = target.tooltip ? (target.tooltip === this ? undefined : target.tooltip) : target.getAttribute('tooltip');
+        if ( tooltip && firstTargetableElement ) {
           this._tooltipBbox = target.getBoundingClientRect();
           this.show(tooltip, firstTargetableElement);
-          break;
+          return;
         }
       }
       if ( ++depth === maxDepth ) {
         break;
       }
     }
-  }
-
-  /**
-   * Define the tooltip location
-   *
-   * @param left horizontal position
-   * @param top vertical position
-   */
-  setLocation (left, top) {
-    this.style.left = left + 'px';
-    this.style.top = top + 'px';
-    this.updateStyles();
   }
 
   setVisible (visible) {
