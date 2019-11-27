@@ -115,9 +115,9 @@ class CasperTooltip extends PolymerElement {
     this.setVisible(false);
   }
 
-/**
- * Function that is called to bind mouseMovement to look for tooltips
- */
+  /**
+   * Function that is called to bind mouseMovement to look for tooltips
+   */
   mouseMoveToolip (event, maxDepth = 3) {
     let depth = 0;
     const targetPath = event.composedPath ? event.composedPath() : event.path;
@@ -171,7 +171,7 @@ class CasperTooltip extends PolymerElement {
    *
    * The bounding box of the "controlling" area is used to position the tooltip below. The arrow
    * is centered along the lower edge of the controller and body of the tooltip is adjusted to
-   * fit inside the central 90% of the page.
+   * fit inside the page.
    *
    * @param content The html content to put inside the tooltip
    * @param positionTarget the element where the tooltip is positioned (or a target rectangle)
@@ -236,7 +236,7 @@ class CasperTooltip extends PolymerElement {
   }
 
   _updateBalloon () {
-    var width, height, bb;
+    let width, height, bb;
 
     bb = this.$.text.getBoundingClientRect();
     switch(this.tipEdge) {
@@ -262,13 +262,13 @@ class CasperTooltip extends PolymerElement {
    * @brief Determine the device pixel ratio: 1 on classical displays 2 on retina/UHD displays
    */
   _setupPixelRatio () {
-    var devicePixelRatio  = window.devicePixelRatio || 1;
+    let devicePixelRatio  = window.devicePixelRatio || 1;
     if (devicePixelRatio > 1.6) {
       devicePixelRatio = 2;
     } else {
       devicePixelRatio = 1;
     }
-    var backingStoreRatio = this._ctx.webkitBackingStorePixelRatio ||
+    let backingStoreRatio = this._ctx.webkitBackingStorePixelRatio ||
                             this._ctx.mozBackingStorePixelRatio ||
                             this._ctx.msBackingStorePixelRatio ||
                             this._ctx.oBackingStorePixelRatio ||
@@ -279,11 +279,11 @@ class CasperTooltip extends PolymerElement {
   /**
    * @brief Prepares a rounded rect path, does not paint or stroke it
    *
-   * @param x upper left corner
-   * @param y upper left corner
-   * @param w width of the round rectangle
-   * @param h height of the round rectangle
-   * @param r corner radius
+   * @param {number} x upper left corner
+   * @param {number} y upper left corner
+   * @param {number} w width of the round rectangle
+   * @param {number} h height of the round rectangle
+   * @param {number} r corner radius
    */
   _makeRoundRectPath (x, y, w, h, r) {
     this._ctx.moveTo( x + r, y );
@@ -300,7 +300,7 @@ class CasperTooltip extends PolymerElement {
    * @param {number} height height in pixels of the balloon
    */
   _paintBalloon (width, height) {
-    var tipLocation, tipHeight, tipBase, radius;
+    let tipLocation, tipHeight, tipBase, radius;
 
     this._ctx.fillStyle = '#000';
     this._ctx.globalAlpha = 0.75;
