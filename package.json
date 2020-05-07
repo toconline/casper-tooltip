@@ -1,7 +1,10 @@
 {
   "description": "Simple tooltip for casper UI",
-  "name": "@casper2020/casper-tooltip",
-  "version": "1.1.0",
+  "name": "@cloudware-casper/casper-tooltip",
+  "version": "1.2.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
