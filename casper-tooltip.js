@@ -174,6 +174,11 @@ class CasperTooltip extends PolymerElement {
   show (tooltipText, positionTargetRect, tooltipPosition = 'bottom') {
     this.tooltipPosition = tooltipPosition;
 
+    // Check if we received an object or the bounds.
+    if (positionTargetRect instanceof HTMLElement) {
+      positionTargetRect = positionTargetRect.getBoundingClientRect();
+    }
+
     const positionTargetBounds = {
       top: positionTargetRect.top,
       left: positionTargetRect.left,
