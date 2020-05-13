@@ -68,14 +68,8 @@ class CasperTooltip extends PolymerElement {
 
   static get properties () {
     return {
-      /**
-       * This property states where the tooltip will appear.
-       *
-       *
-       */
       tooltipPosition: {
-        type: String,
-        value: 'bottom'
+        type: String
       },
       radius: {
         type: Number,
@@ -143,7 +137,7 @@ class CasperTooltip extends PolymerElement {
 
         if (tooltipText) {
           this.__tooltipBounds = element.getBoundingClientRect();
-          this.show(element, tooltipText, tooltipPosition);
+          this.show(tooltipText, this.__tooltipBounds, tooltipPosition);
           return;
         }
       }
@@ -173,13 +167,13 @@ class CasperTooltip extends PolymerElement {
    * is centered along the lower edge of the controller and body of the tooltip is adjusted to
    * fit inside the page.
    *
-   * @param content The html content to put inside the tooltip
-   * @param positionTarget the element where the tooltip is positioned (or a target rectangle)
+   * @param tooltipText The html content to put inside the tooltip.
+   * @param positionTargetRect The element's bounds where the tooltip will be positioned.
+   * @param tooltipPosition The position on which the tooltip should appear.
    */
-  show (positionTarget, tooltipText, tooltipPosition) {
+  show (tooltipText, positionTargetRect, tooltipPosition = 'bottom') {
     this.tooltipPosition = tooltipPosition;
 
-    const positionTargetRect = positionTarget.getBoundingClientRect();
     const positionTargetBounds = {
       top: positionTargetRect.top,
       left: positionTargetRect.left,
