@@ -234,8 +234,8 @@ class CasperTooltip extends PolymerElement {
     }
 
     this.tipLocation = 0.5;
-    this.style.top = `${tooltipTop}px`;
-    this.style.left = `${tooltipLeft}px`;
+    this.style.top = `${tooltipTop - fitInto.top}px`;
+    this.style.left = `${tooltipLeft - fitInto.left}px`;
     this.__updateBalloon(tooltipPosition);
   }
 
