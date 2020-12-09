@@ -174,18 +174,21 @@ class CasperTooltip extends PolymerElement {
   show (tooltipText, positionTargetRect, tooltipPosition = 'bottom') {
     this.tooltipPosition = tooltipPosition;
 
+    const fitInto = this.fitInto.getBoundingClientRect();
+    const tooltipWidth = this.$.text.getBoundingClientRect().width;
+
     // Check if we received an object or the bounds.
     if (positionTargetRect instanceof HTMLElement) {
       positionTargetRect = positionTargetRect.getBoundingClientRect();
     }
 
     const positionTargetBounds = {
-      top: positionTargetRect.top,
-      left: positionTargetRect.left,
       width: positionTargetRect.width,
       height: positionTargetRect.height,
-      right: positionTargetRect.left + positionTargetRect.width,
-      bottom: positionTargetRect.top + positionTargetRect.height,
+      top: positionTargetRect.top + fitInto.top,
+      left: positionTargetRect.left + fitInto.left,
+      bottom: positionTargetRect.top + fitInto.top + positionTargetRect.height,
+      right: positionTargetRect.left + fitInto.left + positionTargetRect.width,
     };
 
     this.__showing = true;
@@ -222,6 +225,12 @@ class CasperTooltip extends PolymerElement {
         tooltipLeft = positionTargetBounds.right;
         this.$.text.style.margin = `0 0 0 ${this.tipHeight}px`;
         break;
+    }
+
+    if (tooltipLeft < fitInto.left) {
+      tooltipLeft = fitInto.left;
+    } else if (tooltipLeft + tooltipWidth > fitInto.left + fitInto.width) {
+      tooltipLeft = fitInto.left + fitInto.width - tooltipWidth;
     }
 
     this.tipLocation = 0.5;
