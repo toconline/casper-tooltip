@@ -1,7 +1,7 @@
 {
   "description": "Simple tooltip for casper UI",
   "name": "@cloudware-casper/casper-tooltip",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
