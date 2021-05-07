@@ -175,7 +175,6 @@ class CasperTooltip extends PolymerElement {
     this.tooltipPosition = tooltipPosition;
 
     const fitInto = this.fitInto.getBoundingClientRect();
-    const tooltipWidth = this.$.text.getBoundingClientRect().width;
 
     // Check if we received an object or the bounds.
     if (positionTargetRect instanceof HTMLElement) {
@@ -228,12 +227,17 @@ class CasperTooltip extends PolymerElement {
     }
 
     if (tooltipLeft < fitInto.left) {
+      // Left of the screen
       tooltipLeft = fitInto.left;
-    } else if (tooltipLeft + tooltipWidth > fitInto.left + fitInto.width) {
-      tooltipLeft = fitInto.left + fitInto.width - tooltipWidth;
+      this.tipLocation = (positionTargetRect.left + (positionTargetRect.width / 2)) / tooltipRect.width;
+    } else if (tooltipLeft + tooltipRect.width > fitInto.left + fitInto.width) {
+      // Right of the screen
+      tooltipLeft = fitInto.left + fitInto.width - tooltipRect.width;
+      this.tipLocation = (tooltipRect.width - (fitInto.width - positionTargetRect.left - (positionTargetRect.width / 2))) /  tooltipRect.width;
+    } else {
+      this.tipLocation = 0.5;
     }
 
-    this.tipLocation = 0.5;
     this.style.top = `${tooltipTop - fitInto.top}px`;
     this.style.left = `${tooltipLeft - fitInto.left}px`;
     this.__updateBalloon(tooltipPosition);
