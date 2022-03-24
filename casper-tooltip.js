@@ -130,7 +130,7 @@ class CasperTooltip extends PolymerElement {
 
     // Find a tooltip, and open it at the first element.
     for (let element of eventPath) {
-      if (element instanceof HTMLElement && element.nodeName.toLowerCase() !== 'slot') {
+      if ((element instanceof HTMLElement || element instanceof SVGElement ) && element.nodeName.toLowerCase() !== 'slot') {
         // Get the tooltip's text and position.
         const tooltipText = element.tooltip || element.getAttribute('tooltip');
         const tooltipPosition = element.tooltipPosition || element.getAttribute('tooltip-position') || 'bottom';
