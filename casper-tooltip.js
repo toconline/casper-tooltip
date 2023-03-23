@@ -92,6 +92,18 @@ class CasperTooltip extends PolymerElement {
       },
       fitInto: {
         type: Element
+      },
+      backgroundColor: {
+        type: String,
+        value: '#000'
+      },
+      backgroundAlpha: {
+        type: Number,
+        value: 0.75
+      },
+      textPadding: {
+        type: Number,
+        value: '20'
       }
     };
   }
@@ -197,6 +209,7 @@ class CasperTooltip extends PolymerElement {
     this.style.width = `${document.body.offsetWidth}px`;
     this.$.text.innerHTML = tooltipText;
     this.$.text.style.margin = 0;
+    this.$.text.style.padding = this.textPadding + 'px';
 
     const tooltipRect = this.$.text.getBoundingClientRect();
 
@@ -314,9 +327,8 @@ class CasperTooltip extends PolymerElement {
    */
   __paintBalloon (width, height) {
     let tipLocation;
-
-    this.__canvasContext.fillStyle = '#000';
-    this.__canvasContext.globalAlpha = 0.75;
+    this.__canvasContext.fillStyle = this.backgroundColor;
+    this.__canvasContext.globalAlpha = this.backgroundAlpha;
 
     const radius = this.radius * this.__ratio;
     const tipBase = this.tipBase * this.__ratio;
