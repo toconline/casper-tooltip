@@ -103,7 +103,7 @@ class CasperTooltip extends PolymerElement {
       },
       textPadding: {
         type: Number,
-        value: '20'
+        value: '6'
       }
     };
   }
