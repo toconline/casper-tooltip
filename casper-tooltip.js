@@ -211,7 +211,7 @@ class CasperTooltip extends PolymerElement {
 
     const purifiedHTML = DOMPurify.sanitize(tooltipText, {
       CUSTOM_ELEMENT_HANDLING: {
-          tagNameCheck: /^casper-|day-detail-tooltip/, // only casper elements are allowed
+          tagNameCheck: /^casper-|^day-detail-tooltip/, // only casper elements are allowed
           attributeNameCheck: /icon/, // only icon attribute is allowed
           allowCustomizedBuiltInElements: false, // no customized built-ins allowed
       },
