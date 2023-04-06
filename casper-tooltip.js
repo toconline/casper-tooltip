@@ -19,6 +19,7 @@
  */
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import DOMPurify from 'dompurify';
 
 class CasperTooltip extends PolymerElement {
   static get template () {
@@ -207,7 +208,16 @@ class CasperTooltip extends PolymerElement {
 
     // ... set text and size the tooltip, max width up to 100% of page width ...
     this.style.width = `${document.body.offsetWidth}px`;
-    this.$.text.innerHTML = tooltipText;
+
+    const purifiedHTML = DOMPurify.sanitize(tooltipText, {
+      CUSTOM_ELEMENT_HANDLING: {
+          tagNameCheck: /^casper-/, // only casper elements are allowed
+          attributeNameCheck: /icon/, // only icon attribute is allowed
+          allowCustomizedBuiltInElements: false, // no customized built-ins allowed
+      },
+    });
+    this.$.text.innerHTML = purifiedHTML;
+
     this.$.text.style.margin = 0;
     this.$.text.style.padding = this.textPadding + 'px';
 
