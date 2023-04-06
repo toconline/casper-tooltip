@@ -7,7 +7,6 @@
   },
   "main": "casper-tooltip.js",
   "dependencies": {
-    "@polymer/polymer": "^3.x",
-    "dompurify": "^2.x"
+    "@polymer/polymer": "^3.x"
   }
 }
