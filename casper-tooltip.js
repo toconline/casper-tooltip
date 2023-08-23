@@ -189,6 +189,8 @@ class CasperTooltip extends PolymerElement {
 
     const fitInto = this.fitInto.getBoundingClientRect();
 
+    const isDialog = this.fitInto.nodeName === 'DIALOG'; // dialog 0,0 reference is different
+
     // Check if we received an object or the bounds.
     if (positionTargetRect instanceof HTMLElement) {
       positionTargetRect = positionTargetRect.getBoundingClientRect();
@@ -197,10 +199,10 @@ class CasperTooltip extends PolymerElement {
     const positionTargetBounds = {
       width: positionTargetRect.width,
       height: positionTargetRect.height,
-      top: positionTargetRect.top + fitInto.top,
-      left: positionTargetRect.left + fitInto.left,
-      bottom: positionTargetRect.top + fitInto.top + positionTargetRect.height,
-      right: positionTargetRect.left + fitInto.left + positionTargetRect.width,
+      top: positionTargetRect.top + (isDialog ? 0 : fitInto.top),
+      left: positionTargetRect.left + (isDialog ? 0 : fitInto.left),
+      bottom: positionTargetRect.top + (isDialog ? 0 : fitInto.top) + positionTargetRect.height,
+      right: positionTargetRect.left + (isDialog ? 0 : fitInto.left) + positionTargetRect.width,
     };
 
     this.__showing = true;
