@@ -18,11 +18,58 @@
   -
  */
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { LitElement, html } from 'lit';
 import DOMPurify from 'dompurify';
 
-class CasperTooltip extends PolymerElement {
-  static get template () {
+class CasperTooltip extends LitElement {
+  static get properties () {
+    return {
+      tooltipPosition: {
+        type: String
+      },
+      radius: {
+        type: Number
+      },
+      tipHeight: {
+        type: Number
+      },
+      tipBase: {
+        type: Number
+      },
+      tipLocation: {
+        type: Number
+      },
+      positionTarget: {
+        type: Object
+      },
+      fitInto: {
+        type: Object
+      },
+      backgroundColor: {
+        type: String
+      },
+      backgroundAlpha: {
+        type: Number
+      },
+      textPadding: {
+        type: Number
+      }
+    };
+  }
+
+  constructor () {
+    super();
+    this.radius = 5;
+    this.tipHeight = 5;
+    this.tipBase = 10;
+    this.tipLocation = 0.5;
+    this.backgroundColor = '#000';
+    this.backgroundAlpha = 0.75;
+    this.textPadding = '6';
+  }
+
+  render () {
+    // Style needs to be inside render so it works in old ctb epaper
     return html`
       <style>
         :host {
@@ -35,31 +82,27 @@ class CasperTooltip extends PolymerElement {
           width: 50px;
           z-index: 200; /* to be above the wizard */
         }
-
         .visible {
           visibility: visible;
           opacity: 1;
           transition: visibility 0.1s, opacity 0.1s linear;
         }
-
         .hidden {
           visibility: hidden;
           opacity: 0;
           transition: visibility 0.5s, opacity 0.5s ease-in;
         }
-
         #canvas {
           position: absolute;
         }
-
         #text {
           color: white;
           padding: 5px;
           font-size: 10px;
-          cursor: pointer;
           position: absolute;
           text-align: center;
           text-transform: uppercase;
+          cursor: pointer;
         }
       </style>
       <canvas id="canvas"></canvas>
@@ -67,59 +110,18 @@ class CasperTooltip extends PolymerElement {
     `;
   }
 
-  static get properties () {
-    return {
-      tooltipPosition: {
-        type: String
-      },
-      radius: {
-        type: Number,
-        value: 5
-      },
-      tipHeight: {
-        type: Number,
-        value: 5
-      },
-      tipBase: {
-        type: Number,
-        value: 10
-      },
-      tipLocation: {
-        type: Number,
-        value: 0.5
-      },
-      positionTarget: {
-        type: Element
-      },
-      fitInto: {
-        type: Element
-      },
-      backgroundColor: {
-        type: String,
-        value: '#000'
-      },
-      backgroundAlpha: {
-        type: Number,
-        value: 0.75
-      },
-      textPadding: {
-        type: Number,
-        value: '6'
-      }
-    };
-  }
-
-  ready () {
-    super.ready();
-    this.__canvasContext = this.$.canvas.getContext('2d');
-    this.__setupPixelRatio();
-    this.addEventListener('click', e => this.hide(e));
-  }
-
   connectedCallback () {
     super.connectedCallback();
     this.__showing = false;
     this.setVisible(false);
+  }
+
+  firstUpdated () {
+    this.canvas = this.shadowRoot.getElementById('canvas');
+    this.text = this.shadowRoot.getElementById('text');
+    this.__canvasContext = this.canvas.getContext('2d');
+    this.__setupPixelRatio();
+    this.addEventListener('click', e => this.hide(e));
   }
 
   /**
@@ -160,16 +162,18 @@ class CasperTooltip extends PolymerElement {
   }
 
   setVisible (visible) {
+    if (!this.canvas || !this.text) return;
+
     if (visible) {
-      this.$.canvas.classList.remove('hidden');
-      this.$.text.classList.remove('hidden');
-      this.$.canvas.classList.add('visible');
-      this.$.text.classList.add('visible');
+      this.canvas.classList.remove('hidden');
+      this.text.classList.remove('hidden');
+      this.canvas.classList.add('visible');
+      this.text.classList.add('visible');
     } else {
-      this.$.canvas.classList.add('hidden');
-      this.$.text.classList.add('hidden');
-      this.$.canvas.classList.remove('visible');
-      this.$.text.classList.remove('visible');
+      this.canvas.classList.add('hidden');
+      this.text.classList.add('hidden');
+      this.canvas.classList.remove('visible');
+      this.text.classList.remove('visible');
     }
   }
 
@@ -218,12 +222,12 @@ class CasperTooltip extends PolymerElement {
           allowCustomizedBuiltInElements: false, // no customized built-ins allowed
       },
     });
-    this.$.text.innerHTML = purifiedHTML;
+    this.text.innerHTML = purifiedHTML;
 
-    this.$.text.style.margin = 0;
-    this.$.text.style.padding = this.textPadding + 'px';
+    this.text.style.margin = 0;
+    this.text.style.padding = this.textPadding + 'px';
 
-    const tooltipRect = this.$.text.getBoundingClientRect();
+    const tooltipRect = this.text.getBoundingClientRect();
 
     let tooltipLeft, tooltipTop;
     const positionTargetCenterY = positionTargetBounds.top + positionTargetBounds.height / 2;
@@ -233,12 +237,12 @@ class CasperTooltip extends PolymerElement {
       case 'bottom':
         tooltipTop = positionTargetBounds.bottom;
         tooltipLeft = positionTargetCenterX - tooltipRect.width / 2;
-        this.$.text.style.margin = `${this.tipHeight}px 0 0 0`;
+        this.text.style.margin = `${this.tipHeight}px 0 0 0`;
         break;
       case 'top':
         tooltipTop = positionTargetBounds.top - tooltipRect.height - this.tipHeight;
         tooltipLeft = positionTargetCenterX - tooltipRect.width / 2;
-        this.$.text.style.margin = `0 0 ${this.tipHeight}px 0`;
+        this.text.style.margin = `0 0 ${this.tipHeight}px 0`;
         break;
       case 'left':
         tooltipTop = positionTargetCenterY - tooltipRect.height / 2;
@@ -247,7 +251,7 @@ class CasperTooltip extends PolymerElement {
       case 'right':
         tooltipTop = positionTargetCenterY - tooltipRect.height / 2;
         tooltipLeft = positionTargetBounds.right;
-        this.$.text.style.margin = `0 0 0 ${this.tipHeight}px`;
+        this.text.style.margin = `0 0 0 ${this.tipHeight}px`;
         break;
     }
 
@@ -279,7 +283,7 @@ class CasperTooltip extends PolymerElement {
   __updateBalloon (tooltipPosition) {
     let width, height;
 
-    const tooltipTextRect = this.$.text.getBoundingClientRect();
+    const tooltipTextRect = this.text.getBoundingClientRect();
     switch (tooltipPosition) {
       case 'top':
       case 'bottom':
@@ -293,10 +297,10 @@ class CasperTooltip extends PolymerElement {
         break;
     }
 
-    this.$.canvas.style.width = `${width}px`;
-    this.$.canvas.style.height = `${height}px`;
-    this.$.canvas.width = width * this.__ratio;
-    this.$.canvas.height = height * this.__ratio;
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+    this.canvas.width = width * this.__ratio;
+    this.canvas.height = height * this.__ratio;
     this.__paintBalloon(width - 1, height - 1);
   }
 
