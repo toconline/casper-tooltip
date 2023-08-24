@@ -113,7 +113,6 @@ class CasperTooltip extends LitElement {
   connectedCallback () {
     super.connectedCallback();
     this.__showing = false;
-    this.setVisible(false);
   }
 
   firstUpdated () {
@@ -122,6 +121,7 @@ class CasperTooltip extends LitElement {
     this.__canvasContext = this.canvas.getContext('2d');
     this.__setupPixelRatio();
     this.addEventListener('click', e => this.hide(e));
+    this.setVisible(false);
   }
 
   /**
